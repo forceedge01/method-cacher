@@ -14,6 +14,11 @@ class PersisterTest extends PHPUnit_Framework_TestCase
 
 	public function testPersist()
 	{
-		$this->markTestIncomplete('whatever');
+		$obj = '';
+		$method = '';
+
+		$result = $this->testObject->persist($object, $method);
+
+		$this->assertInstanceOf(Persister::class, $result);
 	}
 }
