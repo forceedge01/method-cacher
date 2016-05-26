@@ -2,7 +2,7 @@
 
 namespace Genesis\MethodPersister;
 
-Class Persister
+class Persister
 {
     /**
      * Store data per user.
@@ -122,7 +122,7 @@ Class Persister
         // Make sure the key also looks at the argument supplied so it can detect a change in the arg
         $key = get_class($callable[0]).'::'.$callable[1].'::'.serialize($args);
 
-        if(! $val = $this->persistenceRepository->get($key, $state)) {
+        if (! $val = $this->persistenceRepository->get($key, $state)) {
             $val = call_user_func_array($callable, $args);
             $this->persistenceRepository->set($key, $val, $time, $state);
         }
