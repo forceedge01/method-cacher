@@ -20,6 +20,7 @@ class PersistenceRepository implements Interfaces\PersistenceRepositoryInterface
     /**
      * @param string $key
      * @param mixed $data
+     * @param string $time
      * @param int $state
      *
      * @return PersistenceRepositoryInterface

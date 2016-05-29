@@ -7,6 +7,7 @@ interface PersistenceRepositoryInterface
     /**
      * @param string $key
      * @param mixed $data
+     * @param int $time
      * @param int $state
      *
      * @return PersistenceRepositoryInterface
