@@ -2,6 +2,9 @@
 
 namespace Genesis\MethodPersister\Interfaces;
 
+/**
+ * Use this interface to implement your own persistence repository for caching methods.
+ */
 interface PersistenceRepositoryInterface
 {
     /**

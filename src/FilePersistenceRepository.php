@@ -2,6 +2,9 @@
 
 namespace Genesis\MethodPersister;
 
+/**
+ * This class provides file caching for the cacher.
+ */
 class FilePersistenceRepository implements Interfaces\PersistenceRepositoryInterface
 {
     /**
