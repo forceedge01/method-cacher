@@ -1,3 +1,5 @@
+Method Persister/Cacher [ ![Codeship Status for forceedge01/method-cacher](https://app.codeship.com/projects/dade2ef0-ad48-0135-c2b8-0e745ba13322/status?branch=master)](https://app.codeship.com/projects/257185)
+
 What is this?
 =============
 
