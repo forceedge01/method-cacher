@@ -2,40 +2,30 @@
 
 namespace Genesis\MethodPersister;
 
-Class Persister
+class Persister implements Interfaces\PersisterInterface
 {
     /**
-     * Store data per user.
-     */
-    const STATE_DISTRIBUTE = 1;
-
-    /**
-     * Store data once for all.
-     */
-    const STATE_CENTRAL = 2;
-
-    /**
-     * @var object $obj The object on which the method exists.
+     * @var object The object on which the method exists.
      */
     private $obj;
 
     /**
-     * @var string $on The method to call.
+     * @var string The method to call.
      */
     private $on;
 
     /**
-     * @var array $args The arguments for the method called.
+     * @var array The arguments for the method called.
      */
     private $args;
 
     /**
-     * @var time $over The time to cache.
+     * @var time The time to cache.
      */
     private $over;
 
     /**
-     * @var int $in The state in which to store the method result.
+     * @var int The state in which to store the method result.
      */
     private $in;
 
@@ -49,6 +39,9 @@ Class Persister
 
     /**
      * Persist a call.
+     *
+     * @param mixed $obj
+     * @param null|mixed $method
      */
     public function persist($obj, $method = null)
     {
@@ -98,7 +91,8 @@ Class Persister
      */
     public function execute()
     {
-        return $this->persistResult(array(
+        return $this->persistResult(
+            array(
                 $this->obj,
                 $this->on
             ),
@@ -113,6 +107,8 @@ Class Persister
      * @param args the arguments to pass to the method to call
      * @param time The amount of time before the data needs to be refreshed
      * @param state/optional Which method is used to store the data
+     * @param mixed $time
+     * @param mixed $state
      *
      * @return val The value stored for the method
      */
@@ -122,7 +118,7 @@ Class Persister
         // Make sure the key also looks at the argument supplied so it can detect a change in the arg
         $key = get_class($callable[0]).'::'.$callable[1].'::'.serialize($args);
 
-        if(! $val = $this->persistenceRepository->get($key, $state)) {
+        if (! $val = $this->persistenceRepository->get($key, $state)) {
             $val = call_user_func_array($callable, $args);
             $this->persistenceRepository->set($key, $val, $time, $state);
         }

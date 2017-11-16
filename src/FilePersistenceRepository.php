@@ -2,7 +2,7 @@
 
 namespace Genesis\MethodPersister;
 
-class PersistenceRepository implements Interfaces\PersistenceRepositoryInterface
+class FilePersistenceRepository implements Interfaces\PersistenceRepositoryInterface
 {
     /**
      * Holds path of the cache folder.
@@ -21,72 +21,72 @@ class PersistenceRepository implements Interfaces\PersistenceRepositoryInterface
      * @param string $key
      * @param mixed $data
      * @param int $state
+     * @param mixed $time
      *
      * @return PersistenceRepositoryInterface
      */
-	public function set($key, $data, $time, $state)
-	{
-		// Prepare data for storage
+    public function set($key, $data, $time, $state)
+    {
+        // Prepare data for storage
         $data = json_encode(['value' => serialize($data), 'time' => strtotime($time)]);
 
-		// Save data in storage 
-        if($state == Persister::STATE_DISTRIBUTE) {
+        // Save data in storage
+        if ($state == Persister::STATE_DISTRIBUTE) {
             // Check for key clashing
             $_SESSION['persistentState'][$key] = $data;
         } else {
             try {
                 // Save to file
-                if(! file_put_contents($this->centralStoragePath . $key, $data)) {
+                if (! file_put_contents($this->centralStoragePath . $key, $data)) {
                     // Fail safe, display 500 for the first time then recover.
-                    if(mkdir($this->centralStoragePath, 0777, true)) {
+                    if (mkdir($this->centralStoragePath, 0777, true)) {
                         throw new \Exception(sprintf(
-                            '"%s" directory was not found but is now created, refresh to continue.', 
+                            '"%s" directory was not found but is now created, refresh to continue.',
                             $this->centralStoragePath
                         ));
                     }
                 }
-            } catch(\Exception $e) {
-                if(! is_dir($this->centralStoragePath)) {
-                    if(mkdir($this->centralStoragePath, 0777, true)) {
+            } catch (\Exception $e) {
+                if (! is_dir($this->centralStoragePath)) {
+                    if (mkdir($this->centralStoragePath, 0777, true)) {
                         throw new \Exception(sprintf(
-                            '"%s" directory was not found but is now created, refresh to continue.', 
-                            $this->centralStoragePath
-                        ));
-                    } else {
-                        throw new \Exception(sprintf(
-                            'Unable to create directory "%s", check permissions.', 
+                            '"%s" directory was not found but is now created, refresh to continue.',
                             $this->centralStoragePath
                         ));
                     }
+                    throw new \Exception(sprintf(
+                            'Unable to create directory "%s", check permissions.',
+                            $this->centralStoragePath
+                        ));
                 }
 
                 throw $e;
-            }            
+            }
         }
 
         return $this;
-	}
+    }
 
-	/**
+    /**
      * @param string $key
      * @param int $state
      *
      * @return false on failure, string otherwise.
      */
-	public function get($key, $state)
-	{
-		$val = null;
+    public function get($key, $state)
+    {
+        $val = null;
 
-		// Get data from storage
-        if($state == Persister::STATE_DISTRIBUTE) {
-            if(! isset($_SESSION['persistentState'][$key])) {
+        // Get data from storage
+        if ($state == Persister::STATE_DISTRIBUTE) {
+            if (! isset($_SESSION['persistentState'][$key])) {
                 return false;
             }
 
             $val = $_SESSION['persistentState'][$key];
         } else {
             // Get from file
-            if(! file_exists($this->centralStoragePath . $key)) {
+            if (! file_exists($this->centralStoragePath . $key)) {
                 return false;
             }
 
@@ -97,10 +97,10 @@ class PersistenceRepository implements Interfaces\PersistenceRepositoryInterface
         $val = json_decode($val, true);
 
         // Check if the data is valid
-        if(! $val || $val['time'] < time()) {
+        if (! $val || $val['time'] < time()) {
             return false;
         }
 
         return unserialize($val['value']);
-	}
+    }
 }
