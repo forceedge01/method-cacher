@@ -1,6 +1,7 @@
 {
 	"name": "genesis/method-persister",
-	"description": "Allows caching of methods in code.",
+	"description": "Allows caching of any method in code.",
+	"type": "library",
 	"author": "Abdul Qureshi <its.inevitable@hotmail.com>",
 	"keywords": ["method cache", "method caching", "method persist", "caching", "persistence", "html cache", "controller cache"],
 	"require": {
