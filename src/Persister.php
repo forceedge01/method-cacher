@@ -81,14 +81,14 @@ class Persister implements Interfaces\PersisterInterface
             ),
             $this->args,
             $this->over,
-            $this->in
+            $this->in ?? self::STATE_CENTRAL
         );
     }
 
     /**
      * @return val The value stored for the method
      */
-    private function persistResult(array $callable, array $args, string $time, int $state = self::STATE_DISTRIBUTE)
+    private function persistResult(array $callable, array $args, string $time, int $state = self::STATE_CENTRAL)
     {
         $val = null;
         // Make sure the key also looks at the argument supplied so it can detect a change in the arg

@@ -88,7 +88,7 @@ class PersisterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedReturn, $result);
     }
 
-    public function testExecuteNoValueReturned()
+    public function testExecuteNoValueReturnedDistribute()
     {
         $expectedReturn = [25, 'abc'];
         $expectedKey = 'GenesisMethodPersisterTestsPersisterTest::randomize::a:2:{i:0;i:25;i:1;s:3:"abc";}';
@@ -112,6 +112,30 @@ class PersisterTest extends PHPUnit_Framework_TestCase
             ->execute();
 
         $this->assertEquals([$expectedReturn], $result);
+    }
+
+    public function testExecuteNoValueReturnedDefaults()
+    {
+        $expectedReturn = [25, 'abc'];
+        $expectedKey = 'GenesisMethodPersisterTestsPersisterTest::randomize::a:0:{}';
+        $time = '+10 seconds';
+
+        $this->persistenceRepositoryMock->expects($this->once())
+            ->method('get')
+            ->with($expectedKey, Persister::STATE_CENTRAL)
+            ->will($this->returnValue(null));
+
+        $this->persistenceRepositoryMock->expects($this->once())
+            ->method('set')
+            ->with($expectedKey, [[]], $time, Persister::STATE_CENTRAL)
+            ->will($this->returnSelf());
+
+        $result = $this->testObject
+            ->persist($this, 'randomize')
+            ->overAPeriodOf($time)
+            ->execute();
+
+        $this->assertEquals([[]], $result);
     }
 
     private function getReflectionProperty($property)
