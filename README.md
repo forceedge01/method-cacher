@@ -51,7 +51,15 @@ $result = $persister->persist($myObject, 'myMethod')
 return $result;
 ```
 
-This will persist the cache for 10 seconds from the first call, after that the cache will be refreshed.
+This will persist the cache for 10 seconds from the first call, after that the cache will be refreshed. The default storage method is centralised but can be changed to distributed i.e session caching using the `->in()` method.
+
+```php
+$result = $persister->persist($myObject, 'userSpecificData')
+    ->withParameters($arg1, $arg2)
+    ->overAPeriodOf('+10 seconds')
+    ->in(PersisterInterface::STATE_DISTRIBUTE)
+    ->execute();
+```
 
 Contributions
 =============
@@ -64,5 +72,5 @@ Tests
 Library is tested using phpunit. To run tests first install dependencies using composer then run command:
 
 ```bash
-phpunit -c tests
+make
 ```

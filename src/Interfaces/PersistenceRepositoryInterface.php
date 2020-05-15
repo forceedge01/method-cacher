@@ -8,20 +8,9 @@ namespace Genesis\MethodPersister\Interfaces;
 interface PersistenceRepositoryInterface
 {
     /**
-     * @param string $key
-     * @param mixed $data
-     * @param int $time
-     * @param int $state
-     *
-     * @return PersistenceRepositoryInterface
+     * @param mixed $data The data to persist.
      */
-    public function set($key, $data, $time, $state);
+    public function set(string $key, $data, string $time, int $state): PersistenceRepositoryInterface;
 
-    /**
-     * @param string $key
-     * @param int $state
-     *
-     * @return false on failure, string otherwise.
-     */
-    public function get($key, $state);
+    public function get(string $key, int $state);
 }

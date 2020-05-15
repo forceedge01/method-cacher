@@ -2,6 +2,8 @@
 
 namespace Genesis\MethodPersister;
 
+use Genesis\MethodPersister\Interfaces\PersisterInterface;
+
 class Persister implements Interfaces\PersisterInterface
 {
     /**
@@ -38,12 +40,9 @@ class Persister implements Interfaces\PersisterInterface
     }
 
     /**
-     * Persist a call.
-     *
-     * @param mixed $obj
-     * @param null|mixed $method
+     * @param mixed $obj The object to cache.
      */
-    public function persist($obj, $method = null)
+    public function persist($obj, ?string $method = null): PersisterInterface
     {
         $this->obj = $obj;
         $this->on = $method;
@@ -52,43 +51,27 @@ class Persister implements Interfaces\PersisterInterface
         return $this;
     }
 
-    /**
-     * Time for caching.
-     *
-     * @param int $time
-     */
-    public function overAPeriodOf($time)
+    public function overAPeriodOf(string $time): PersisterInterface
     {
         $this->over = $time;
 
         return $this;
     }
 
-    /**
-     * Which storage state to use.
-     *
-     * @param int $state
-     */
-    public function in($state = self::STATE_CENTRAL)
+    public function in(int $state = self::STATE_CENTRAL): PersisterInterface
     {
         $this->in = $state;
 
         return $this;
     }
 
-    /**
-     * Parameters to pass into the method.
-     */
-    public function withParameters()
+    public function withParameters(): PersisterInterface
     {
         $this->args = func_get_args();
 
         return $this;
     }
 
-    /**
-     * Execute the persister.
-     */
     public function execute()
     {
         return $this->persistResult(
@@ -103,20 +86,13 @@ class Persister implements Interfaces\PersisterInterface
     }
 
     /**
-     * @param callable an array with the object and its method to call
-     * @param args the arguments to pass to the method to call
-     * @param time The amount of time before the data needs to be refreshed
-     * @param state/optional Which method is used to store the data
-     * @param mixed $time
-     * @param mixed $state
-     *
      * @return val The value stored for the method
      */
-    private function persistResult(array $callable, array $args, $time, $state = self::STATE_DISTRIBUTE)
+    private function persistResult(array $callable, array $args, string $time, int $state = self::STATE_DISTRIBUTE)
     {
         $val = null;
         // Make sure the key also looks at the argument supplied so it can detect a change in the arg
-        $key = get_class($callable[0]).'::'.$callable[1].'::'.serialize($args);
+        $key = $this->className($callable[0]).'::'.$callable[1].'::'.serialize($args);
 
         if (! $val = $this->persistenceRepository->get($key, $state)) {
             $val = call_user_func_array($callable, $args);
@@ -124,5 +100,10 @@ class Persister implements Interfaces\PersisterInterface
         }
 
         return $val;
+    }
+
+    private function className($name): string
+    {
+        return str_replace('\\', '', get_class($name));
     }
 }
