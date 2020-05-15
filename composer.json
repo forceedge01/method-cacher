@@ -2,6 +2,7 @@
 	"name": "genesis/method-persister",
 	"description": "Allows caching of methods in code.",
 	"author": "Abdul Qureshi <its.inevitable@hotmail.com>",
+	"keywords": ["method cache", "method caching", "method persist", "caching", "persistence", "html cache", "controller cache"],
 	"require": {
 		"php": "7.1"
 	},
