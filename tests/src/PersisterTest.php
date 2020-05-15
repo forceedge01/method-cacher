@@ -9,7 +9,6 @@ function call_user_func_array(array $callable, array $params)
 
 namespace Genesis\MethodPersister\Tests;
 
-use DateTime;
 use Genesis\MethodPersister\Interfaces\PersistenceRepositoryInterface;
 use Genesis\MethodPersister\Persister;
 use PHPUnit_Framework_TestCase;
@@ -46,11 +45,9 @@ class PersisterTest extends PHPUnit_Framework_TestCase
 
     public function testOverAPeriodOf()
     {
-        $time = new DateTime();
+        $this->testObject->overAPeriodOf('+10 minutes');
 
-        $this->testObject->overAPeriodOf($time);
-
-        $this->assertEquals($time, $this->getReflectionProperty('over'));
+        $this->assertEquals('+10 minutes', $this->getReflectionProperty('over'));
     }
 
     public function testIn()
@@ -74,7 +71,7 @@ class PersisterTest extends PHPUnit_Framework_TestCase
     public function testExecuteValueReturned()
     {
         $expectedReturn = ['abc', 123];
-        $expectedKey = 'Genesis\MethodPersister\Tests\PersisterTest::randomize::a:2:{i:0;i:25;i:1;s:3:"abc";}';
+        $expectedKey = 'GenesisMethodPersisterTestsPersisterTest::randomize::a:2:{i:0;i:25;i:1;s:3:"abc";}';
 
         $this->persistenceRepositoryMock->expects($this->once())
             ->method('get')
@@ -94,7 +91,7 @@ class PersisterTest extends PHPUnit_Framework_TestCase
     public function testExecuteNoValueReturned()
     {
         $expectedReturn = [25, 'abc'];
-        $expectedKey = 'Genesis\MethodPersister\Tests\PersisterTest::randomize::a:2:{i:0;i:25;i:1;s:3:"abc";}';
+        $expectedKey = 'GenesisMethodPersisterTestsPersisterTest::randomize::a:2:{i:0;i:25;i:1;s:3:"abc";}';
         $time = '+10 seconds';
 
         $this->persistenceRepositoryMock->expects($this->once())
@@ -105,7 +102,7 @@ class PersisterTest extends PHPUnit_Framework_TestCase
         $this->persistenceRepositoryMock->expects($this->once())
             ->method('set')
             ->with($expectedKey, [$expectedReturn], $time, Persister::STATE_DISTRIBUTE)
-            ->will($this->returnValue($expectedReturn));
+            ->will($this->returnSelf());
 
         $result = $this->testObject
             ->persist($this, 'randomize')

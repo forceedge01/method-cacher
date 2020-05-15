@@ -15,31 +15,24 @@ interface PersisterInterface
     const STATE_CENTRAL = 2;
 
     /**
-     * Persist a call.
-     *
-     * @param mixed $obj
-     * @param null|mixed $method
+     * @param mixed $obj The object to call on.
      */
-    public function persist($obj, $method = null);
+    public function persist($obj, ?string $method = null): PersisterInterface;
 
     /**
-     * Time for caching.
-     *
-     * @param int $time
+     * Cache for how long.
      */
-    public function overAPeriodOf($time);
+    public function overAPeriodOf(string $time): PersisterInterface;
 
     /**
-     * Which storage state to use.
-     *
-     * @param int $state
+     * Method of caching.
      */
-    public function in($state = self::STATE_CENTRAL);
+    public function in(int $state = self::STATE_CENTRAL): PersisterInterface;
 
     /**
      * Parameters to pass into the method.
      */
-    public function withParameters();
+    public function withParameters(): PersisterInterface;
 
     /**
      * Execute the persister.

@@ -70,7 +70,15 @@ class FilePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function testStoragePath()
     {
-        $this->assertEquals('./storage/path', $this->getReflectionProperty('centralStoragePath'));
+        $this->assertEquals('./storage/path/', $this->getReflectionProperty('centralStoragePath'));
+    }
+
+    public function testStoragePathHandleTrailingSlash()
+    {
+        $storagePath = './storage/path/';
+        $this->testObject = new FilePersistenceRepository($storagePath);
+
+        $this->assertEquals('./storage/path/', $this->getReflectionProperty('centralStoragePath'));
     }
 
     public function testSetStateDistribute()

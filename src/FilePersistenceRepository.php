@@ -2,6 +2,8 @@
 
 namespace Genesis\MethodPersister;
 
+use Genesis\MethodPersister\Interfaces\PersistenceRepositoryInterface;
+
 /**
  * This class provides file caching for the cacher.
  */
@@ -12,23 +14,12 @@ class FilePersistenceRepository implements Interfaces\PersistenceRepositoryInter
      */
     private $centralStoragePath;
 
-    /**
-     * @param string $centralStoragePath
-     */
-    public function __construct($centralStoragePath)
+    public function __construct(string $centralStoragePath)
     {
-        $this->centralStoragePath = $centralStoragePath;
+        $this->centralStoragePath = str_replace('//', '/', $centralStoragePath . DIRECTORY_SEPARATOR);
     }
 
-    /**
-     * @param string $key
-     * @param mixed $data
-     * @param int $state
-     * @param mixed $time
-     *
-     * @return PersistenceRepositoryInterface
-     */
-    public function set($key, $data, $time, $state)
+    public function set(string $key, $data, string $time, int $state): PersistenceRepositoryInterface
     {
         // Prepare data for storage
         $data = json_encode(['value' => serialize($data), 'time' => strtotime($time)]);
@@ -71,12 +62,9 @@ class FilePersistenceRepository implements Interfaces\PersistenceRepositoryInter
     }
 
     /**
-     * @param string $key
-     * @param int $state
-     *
      * @return false on failure, string otherwise.
      */
-    public function get($key, $state)
+    public function get(string $key, int $state)
     {
         $val = null;
 

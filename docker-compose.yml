@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+    php71-tests:
+        build:
+            dockerfile: Dockerfile
+            context: .
+        volumes:
+            - /app/vendor
+            - .:/app
