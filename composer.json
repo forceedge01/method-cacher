@@ -5,7 +5,7 @@
 	"author": "Abdul Qureshi <its.inevitable@hotmail.com>",
 	"keywords": ["method cache", "method caching", "method persist", "caching", "persistence", "html cache", "controller cache"],
 	"require": {
-		"php": "7.1"
+		"php": "~7.1"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~5.0"
